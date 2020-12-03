@@ -14,8 +14,8 @@ type IDisbursement interface {
 // IDatabase ...
 type IDatabase interface {
 	GetListDisbursement(ctx context.Context, request interface{}) (interface{}, error)
-	GetDetailDisbursement(ctx context.Context, request interface{}) (interface{}, error)
+	GetDetailDisbursement(ctx context.Context, id int64) (*model.Disbursement, error)
 	InsertDetailDisbursement(ctx context.Context, request interface{}) error
-	UpdateDetailDisbursement(ctx context.Context, request interface{}) error
+	UpdateDetailDisbursement(ctx context.Context, data *model.Disbursement) error
 	SaveLogDetailDisbursement(ctx context.Context, id int64) error
 }

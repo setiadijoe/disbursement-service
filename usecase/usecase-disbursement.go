@@ -85,5 +85,38 @@ func (disb *Disbursement) UpdateDisbursement(ctx context.Context, request *model
 		level.Error(logger).Log("error", err)
 		return nil, err
 	}
-	return resp, nil
+
+	data, err := disb.DBRepo.GetDetailDisbursement(ctx, request.ID)
+	if nil != err {
+		level.Error(logger).Log("error", err)
+		return nil, err
+	}
+
+	if resp.Receipt != nil {
+		data.Receipt.String = *resp.Receipt
+		data.Receipt.Valid = true
+	}
+
+	data.Status = resp.Status
+	if resp.TimeServed != nil {
+		data.TimeServed.Time = *resp.TimeServed
+		data.TimeServed.Valid = true
+	}
+
+	data.Timestamp = resp.Timestamp
+
+	err = disb.DBRepo.UpdateDetailDisbursement(ctx, data)
+	if nil != err {
+		level.Error(logger).Log("error", err)
+		return nil, err
+	}
+
+	// save the log
+	err = disb.DBRepo.SaveLogDetailDisbursement(ctx, data.ID)
+	if nil != err {
+		level.Error(logger).Log("error", err)
+		return nil, err
+	}
+
+	return data, nil
 }

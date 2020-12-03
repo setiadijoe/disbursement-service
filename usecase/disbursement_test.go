@@ -4,6 +4,7 @@ import (
 	"context"
 	mock_repository "disbursement-service/mocks/mock_disbursement"
 	"disbursement-service/mocks/testcases/getdisbursement"
+	"disbursement-service/mocks/testcases/updatedisbursement"
 	"disbursement-service/usecase"
 	"fmt"
 	"os"
@@ -38,7 +39,7 @@ var _ = Describe("Disbursement", func() {
 		data := getdisbursement.TestCaseData[idx]
 		mockFlip.EXPECT().RequestDisbursement(ctx, &data.RequestToFlip.Req).Return(data.ExpectedFromFlip.Response, data.ExpectedFromFlip.Error).Times(1)
 		mockDB.EXPECT().InsertDetailDisbursement(ctx, &data.RequestSaveDB.Req).Return(data.ExpectedFromDB.Error).Times(1)
-		mockDB.EXPECT().SaveLogDetailDisbursement(ctx, data.RequestSaveLogDB.ID).Return(data.ExpectedFromDB.Error).Times(1)
+		mockDB.EXPECT().SaveLogDetailDisbursement(ctx, gomock.Any()).Return(data.ExpectedFromDB.Error).Times(1)
 		resp, err := disb.GetDisbursement(ctx, &data.ParamUsecase.Req)
 
 		if err == nil {
@@ -47,12 +48,30 @@ var _ = Describe("Disbursement", func() {
 		} else {
 			Expect(err.Error()).To(Equal(data.ResponseUsecase.Error.Error()))
 		}
+	}
 
+	// Update Disbursement test logic
+	var UpdateDisbursementLogic = func(idx int) {
+		ctx := context.Background()
+		data := updatedisbursement.TestCaseData[idx]
+		mockFlip.EXPECT().GetDisbursementStatus(ctx, &data.RequestFlip.Req).Return(data.FlipResponse.Response, data.FlipResponse.Error).Times(1)
+		mockDB.EXPECT().GetDetailDisbursement(ctx, data.RequestDetailDisubrsement.ID).Return(data.DetailDisbursementResponse.Response, data.DetailDisbursementResponse.Error).Times(1)
+		mockDB.EXPECT().UpdateDetailDisbursement(ctx, gomock.Any()).Return(data.UpdateDetailResponse.Error).Times(1)
+		mockDB.EXPECT().SaveLogDetailDisbursement(ctx, data.RequestSaveLogDB.ID).Return(data.ExpectedSaveLogDB.Error).Times(1)
+		resp, err := disb.UpdateDisbursement(ctx, &data.RequestUsecase.Req)
+
+		if err == nil {
+			Expect(resp).To(Equal(data.UsecaseResponse.Response))
+			Expect(err).To(BeNil())
+		} else {
+			Expect(err.Error()).To(Equal(data.UsecaseResponse.Error.Error()))
+		}
 	}
 
 	// sort all function name
 	var unitTestLogic = map[string]map[string]interface{}{
-		"GetDisbursementLogic": {"func": GetDisbursementLogic, "test_case_count": len(getdisbursement.TestCaseData), "desc": getdisbursement.Description()},
+		"GetDisbursementLogic":    {"func": GetDisbursementLogic, "test_case_count": len(getdisbursement.TestCaseData), "desc": getdisbursement.Description()},
+		"UpdateDisbursementLogic": {"func": UpdateDisbursementLogic, "test_case_count": len(updatedisbursement.TestCaseData), "desc": updatedisbursement.Description()},
 	}
 
 	for _, val := range unitTestLogic {

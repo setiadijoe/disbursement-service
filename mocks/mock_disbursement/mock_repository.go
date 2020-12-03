@@ -104,18 +104,18 @@ func (mr *MockIDatabaseMockRecorder) GetListDisbursement(ctx, request interface{
 }
 
 // GetDetailDisbursement mocks base method
-func (m *MockIDatabase) GetDetailDisbursement(ctx context.Context, request interface{}) (interface{}, error) {
+func (m *MockIDatabase) GetDetailDisbursement(ctx context.Context, id int64) (*model.Disbursement, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDetailDisbursement", ctx, request)
-	ret0, _ := ret[0].(interface{})
+	ret := m.ctrl.Call(m, "GetDetailDisbursement", ctx, id)
+	ret0, _ := ret[0].(*model.Disbursement)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetDetailDisbursement indicates an expected call of GetDetailDisbursement
-func (mr *MockIDatabaseMockRecorder) GetDetailDisbursement(ctx, request interface{}) *gomock.Call {
+func (mr *MockIDatabaseMockRecorder) GetDetailDisbursement(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDetailDisbursement", reflect.TypeOf((*MockIDatabase)(nil).GetDetailDisbursement), ctx, request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDetailDisbursement", reflect.TypeOf((*MockIDatabase)(nil).GetDetailDisbursement), ctx, id)
 }
 
 // InsertDetailDisbursement mocks base method
@@ -133,17 +133,17 @@ func (mr *MockIDatabaseMockRecorder) InsertDetailDisbursement(ctx, request inter
 }
 
 // UpdateDetailDisbursement mocks base method
-func (m *MockIDatabase) UpdateDetailDisbursement(ctx context.Context, request interface{}) error {
+func (m *MockIDatabase) UpdateDetailDisbursement(ctx context.Context, data *model.Disbursement) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateDetailDisbursement", ctx, request)
+	ret := m.ctrl.Call(m, "UpdateDetailDisbursement", ctx, data)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateDetailDisbursement indicates an expected call of UpdateDetailDisbursement
-func (mr *MockIDatabaseMockRecorder) UpdateDetailDisbursement(ctx, request interface{}) *gomock.Call {
+func (mr *MockIDatabaseMockRecorder) UpdateDetailDisbursement(ctx, data interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDetailDisbursement", reflect.TypeOf((*MockIDatabase)(nil).UpdateDetailDisbursement), ctx, request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDetailDisbursement", reflect.TypeOf((*MockIDatabase)(nil).UpdateDetailDisbursement), ctx, data)
 }
 
 // SaveLogDetailDisbursement mocks base method
