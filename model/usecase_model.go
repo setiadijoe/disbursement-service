@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 // GetDisbursementRequest ...
 type GetDisbursementRequest struct {
 	BankCode      string
@@ -19,7 +17,7 @@ type GetStatusRequest struct {
 type GetListDisbursement struct {
 	Page      *int64
 	Limit     *int64
-	FirstDate *time.Time
-	LastDate  *time.Time
+	FirstDate *string
+	LastDate  *string
 	Status    *string
 }
