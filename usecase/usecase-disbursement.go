@@ -4,6 +4,7 @@ import (
 	"context"
 	"disbursement-service/model"
 	"disbursement-service/repository"
+	"strconv"
 
 	kitlog "github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
@@ -30,7 +31,12 @@ func NewDisbursement(dbRepo repository.IDatabase, flipRepo repository.IDisbursem
 func (disb *Disbursement) GetDisbursement(ctx context.Context, request *model.GetDisbursementRequest) (interface{}, error) {
 	logger := kitlog.With(disb.Logger, "method", "GetDisbursement")
 	// get the disbursement from third party
-	resp, err := disb.FlipRepo.RequestDisbursement(ctx, request)
+	resp, err := disb.FlipRepo.RequestDisbursement(ctx, &model.FlipRequest{
+		AccountNumber: request.AccountNumber,
+		Amount:        strconv.FormatFloat(request.Amount, 'f', 6, 64),
+		BankCode:      request.BankCode,
+		Remark:        request.Remark,
+	})
 	if nil != err {
 		level.Error(logger).Log("error", err)
 		return nil, err
@@ -61,7 +67,7 @@ func (disb *Disbursement) GetDisbursement(ctx context.Context, request *model.Ge
 	}
 
 	// save the log
-	err = disb.DBRepo.SaveLogDetailDisbursement(ctx, resp)
+	err = disb.DBRepo.SaveLogDetailDisbursement(ctx, resp.ID)
 	if nil != err {
 		level.Error(logger).Log("error", err)
 		return nil, err
@@ -70,9 +76,11 @@ func (disb *Disbursement) GetDisbursement(ctx context.Context, request *model.Ge
 }
 
 // UpdateDisbursement ...
-func (disb *Disbursement) UpdateDisbursement(ctx context.Context, request interface{}) (interface{}, error) {
+func (disb *Disbursement) UpdateDisbursement(ctx context.Context, request *model.GetStatusRequest) (interface{}, error) {
 	logger := kitlog.With(disb.Logger, "method", "UpdateDisbursement")
-	resp, err := disb.FlipRepo.GetDisbursementStatus(ctx, request)
+	resp, err := disb.FlipRepo.GetDisbursementStatus(ctx, &model.FlipStatusRequest{
+		ID: request.ID,
+	})
 	if nil != err {
 		level.Error(logger).Log("error", err)
 		return nil, err

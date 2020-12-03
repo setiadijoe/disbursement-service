@@ -8,5 +8,5 @@ import (
 // IDisbursement ...
 type IDisbursement interface {
 	GetDisbursement(ctx context.Context, request *model.GetDisbursementRequest) (interface{}, error)
-	UpdateDisbursement(ctx context.Context, request interface{}) (interface{}, error)
+	UpdateDisbursement(ctx context.Context, request *model.GetStatusRequest) (interface{}, error)
 }

@@ -18,3 +18,16 @@ type FlipDisbursement struct {
 	TimeServed      *time.Time `json:"time_served"`
 	Fee             float64    `json:"fee"`
 }
+
+// FlipRequest ...
+type FlipRequest struct {
+	BankCode      string `json:"bank_code"`
+	AccountNumber string `json:"account_number"`
+	Remark        string `json:"remark"`
+	Amount        string `json:"amount"`
+}
+
+// FlipStatusRequest ...
+type FlipStatusRequest struct {
+	ID int64
+}

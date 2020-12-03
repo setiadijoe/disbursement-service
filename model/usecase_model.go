@@ -7,3 +7,8 @@ type GetDisbursementRequest struct {
 	Amount        float64
 	Remark        string
 }
+
+// GetStatusRequest ...
+type GetStatusRequest struct {
+	ID int64
+}

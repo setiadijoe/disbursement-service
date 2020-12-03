@@ -7,8 +7,8 @@ import (
 
 // IDisbursement ....
 type IDisbursement interface {
-	RequestDisbursement(ctx context.Context, request interface{}) (*model.FlipDisbursement, error)
-	GetDisbursementStatus(ctx context.Context, request interface{}) (interface{}, error)
+	RequestDisbursement(ctx context.Context, request *model.FlipRequest) (*model.FlipDisbursement, error)
+	GetDisbursementStatus(ctx context.Context, request *model.FlipStatusRequest) (*model.FlipDisbursement, error)
 }
 
 // IDatabase ...
@@ -17,5 +17,5 @@ type IDatabase interface {
 	GetDetailDisbursement(ctx context.Context, request interface{}) (interface{}, error)
 	InsertDetailDisbursement(ctx context.Context, request interface{}) error
 	UpdateDetailDisbursement(ctx context.Context, request interface{}) error
-	SaveLogDetailDisbursement(ctx context.Context, request interface{}) error
+	SaveLogDetailDisbursement(ctx context.Context, id int64) error
 }
