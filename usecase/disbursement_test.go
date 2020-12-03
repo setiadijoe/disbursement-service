@@ -4,6 +4,7 @@ import (
 	"context"
 	mock_repository "disbursement-service/mocks/mock_disbursement"
 	"disbursement-service/mocks/testcases/getdisbursement"
+	"disbursement-service/mocks/testcases/getlistdisbursement"
 	"disbursement-service/mocks/testcases/updatedisbursement"
 	"disbursement-service/usecase"
 	"fmt"
@@ -68,10 +69,27 @@ var _ = Describe("Disbursement", func() {
 		}
 	}
 
+	// Get List Disbursement test logic
+	var GetListDisbursementLogic = func(idx int) {
+		ctx := context.Background()
+		data := getlistdisbursement.TestCaseData[idx]
+		mockDB.EXPECT().GetListDisbursement(ctx, data.RequestGetListDisbursement.Req).Return(data.ResponseGetListDisbursementDB.Response, data.ResponseGetListDisbursementDB.Error).Times(1)
+		mockDB.EXPECT().CountTotalOfDisbursement(ctx, data.RequestCountTotalOfDisbursement.Req).Return(data.ResponseCountTotalOfDisbursement.Response, data.ResponseCountTotalOfDisbursement.Error).Times(1)
+		resp, err := disb.GetListDisbursement(ctx, data.RequestUsecase.Req)
+
+		if err == nil {
+			Expect(resp).ToNot(BeNil())
+			Expect(err).To(BeNil())
+		} else {
+			Expect(err.Error()).To(Equal(data.ResponseUsecase.Error.Error()))
+		}
+	}
+
 	// sort all function name
 	var unitTestLogic = map[string]map[string]interface{}{
-		"GetDisbursementLogic":    {"func": GetDisbursementLogic, "test_case_count": len(getdisbursement.TestCaseData), "desc": getdisbursement.Description()},
-		"UpdateDisbursementLogic": {"func": UpdateDisbursementLogic, "test_case_count": len(updatedisbursement.TestCaseData), "desc": updatedisbursement.Description()},
+		"GetDisbursementLogic":     {"func": GetDisbursementLogic, "test_case_count": len(getdisbursement.TestCaseData), "desc": getdisbursement.Description()},
+		"UpdateDisbursementLogic":  {"func": UpdateDisbursementLogic, "test_case_count": len(updatedisbursement.TestCaseData), "desc": updatedisbursement.Description()},
+		"GetListDisbursementLogic": {"func": GetListDisbursementLogic, "test_case_count": len(getlistdisbursement.TestCaseData), "desc": getlistdisbursement.Description()},
 	}
 
 	for _, val := range unitTestLogic {

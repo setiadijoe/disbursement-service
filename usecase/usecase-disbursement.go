@@ -120,3 +120,27 @@ func (disb *Disbursement) UpdateDisbursement(ctx context.Context, request *model
 
 	return data, nil
 }
+
+// GetListDisbursement ...
+func (disb *Disbursement) GetListDisbursement(ctx context.Context, request *model.GetListDisbursement) (interface{}, error) {
+	logger := kitlog.With(disb.Logger, "method", "GetListDisbursement")
+	resp, err := disb.DBRepo.GetListDisbursement(ctx, request)
+	if nil != err {
+		level.Error(logger).Log("error", err)
+		return nil, err
+	}
+
+	total, err := disb.DBRepo.CountTotalOfDisbursement(ctx, request)
+	if nil != err {
+		level.Error(logger).Log("error", err)
+		return nil, err
+	}
+
+	result := map[string]interface{}{
+		"data":  resp,
+		"total": total,
+		"page":  request.Page,
+	}
+
+	return result, nil
+}

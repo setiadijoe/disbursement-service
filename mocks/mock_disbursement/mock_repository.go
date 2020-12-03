@@ -7,9 +7,8 @@ package mock_repository
 import (
 	context "context"
 	model "disbursement-service/model"
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
+	reflect "reflect"
 )
 
 // MockIDisbursement is a mock of IDisbursement interface
@@ -89,10 +88,10 @@ func (m *MockIDatabase) EXPECT() *MockIDatabaseMockRecorder {
 }
 
 // GetListDisbursement mocks base method
-func (m *MockIDatabase) GetListDisbursement(ctx context.Context, request interface{}) (interface{}, error) {
+func (m *MockIDatabase) GetListDisbursement(ctx context.Context, request *model.GetListDisbursement) ([]*model.Disbursement, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetListDisbursement", ctx, request)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].([]*model.Disbursement)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -101,6 +100,21 @@ func (m *MockIDatabase) GetListDisbursement(ctx context.Context, request interfa
 func (mr *MockIDatabaseMockRecorder) GetListDisbursement(ctx, request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListDisbursement", reflect.TypeOf((*MockIDatabase)(nil).GetListDisbursement), ctx, request)
+}
+
+// CountTotalOfDisbursement mocks base method
+func (m *MockIDatabase) CountTotalOfDisbursement(ctx context.Context, request *model.GetListDisbursement) (*int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountTotalOfDisbursement", ctx, request)
+	ret0, _ := ret[0].(*int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountTotalOfDisbursement indicates an expected call of CountTotalOfDisbursement
+func (mr *MockIDatabaseMockRecorder) CountTotalOfDisbursement(ctx, request interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountTotalOfDisbursement", reflect.TypeOf((*MockIDatabase)(nil).CountTotalOfDisbursement), ctx, request)
 }
 
 // GetDetailDisbursement mocks base method
@@ -119,7 +133,7 @@ func (mr *MockIDatabaseMockRecorder) GetDetailDisbursement(ctx, id interface{}) 
 }
 
 // InsertDetailDisbursement mocks base method
-func (m *MockIDatabase) InsertDetailDisbursement(ctx context.Context, request interface{}) error {
+func (m *MockIDatabase) InsertDetailDisbursement(ctx context.Context, request *model.SaveDisbursement) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertDetailDisbursement", ctx, request)
 	ret0, _ := ret[0].(error)
