@@ -1,10 +1,13 @@
 package usecase
 
-import "context"
+import (
+	"context"
+	"disbursement-service/model"
+)
 
 // IDisbursement ...
 type IDisbursement interface {
-	GetListDisbursement(ctx context.Context, filter interface{}) (interface{}, error)
-	GetDisbursement(ctx context.Context, request interface{}) (interface{}, error)
-	UpdateDisbursement(ctx context.Context, request interface{}) (interface{}, error)
+	GetDisbursement(ctx context.Context, request *model.GetDisbursementRequest) (interface{}, error)
+	GetListDisbursement(ctx context.Context, request *model.GetListDisbursement) (interface{}, error)
+	UpdateDisbursement(ctx context.Context, request *model.GetStatusRequest) (interface{}, error)
 }
