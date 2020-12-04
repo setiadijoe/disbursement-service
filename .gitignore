@@ -1,2 +1,4 @@
 ./usecase/*.out
 *.out
+config.json
+main-app
