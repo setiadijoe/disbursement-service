@@ -151,7 +151,7 @@ func (r *DisbursementRepository) GetDetailDisbursement(ctx context.Context, id i
 
 	query.WriteString(" SELECT id, amount, status, timestamp, bank_code, account_number, beneficiary_name, remark, receipt, time_served, fee")
 	query.WriteString(" FROM flip_disbursement ")
-	query.WriteString(" WHERE id = ? ")
+	query.WriteString(" WHERE id = $1 ")
 
 	if nil != ctx {
 		err = r.conn.GetContext(ctx, result, query.String(), id)

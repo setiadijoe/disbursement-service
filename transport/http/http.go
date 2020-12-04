@@ -46,13 +46,13 @@ func MakeHandler(ctx context.Context, u usecase.IDisbursement, logger kitlog.Log
 		opts...,
 	)
 
-	router := mux.NewRouter()
+	r := mux.NewRouter()
 
-	router.Handle("/samplepath", processGetListDisbursement).Methods("GET")
-	router.Handle("/samplepath", processGetDisbursement).Methods("POST")
-	router.Handle("/samplepath/{id}", processUpdateDisbursement).Methods("GET")
+	r.Handle("/disburse/{id}", processUpdateDisbursement).Methods("PUT")
+	r.Handle("/disburse", processGetListDisbursement).Methods("GET")
+	r.Handle("/disburse", processGetDisbursement).Methods("POST")
 
-	return router
+	return r
 }
 
 func decodeRequestGetDisbursement(ctx context.Context, r *http.Request) (interface{}, error) {

@@ -7,7 +7,7 @@ CREATE TABLE flip_disbursement (
 	account_number varchar(50) NOT NULL,
 	beneficiary_name varchar(50) NOT NULL,
 	remark varchar(50) NOT NULL,
-	receipt varchar(100) NULL,
+	receipt varchar(255) NULL,
 	time_served timestamp NULL,
 	fee float8 NOT NULL,
 	CONSTRAINT pk_id PRIMARY KEY (id)
@@ -22,8 +22,7 @@ CREATE TABLE flip_disbursement_history (
 	account_number varchar(50) NOT NULL,
 	beneficiary_name varchar(50) NOT NULL,
 	remark varchar(50) NOT NULL,
-	receipt varchar(100) NULL,
+	receipt varchar(255) NULL,
 	time_served timestamp NULL,
-	fee float8 NOT NULL,
-	CONSTRAINT pk_flip_disbursement_history_id PRIMARY KEY (id)
+	fee float8 NOT NULL
 );
