@@ -1,6 +1,14 @@
 # Disbursement Service
 ### Technical Testing Flip
 
+#### Config
+
+1. Run  `go mod tidy`
+2. Run  `make test-case` for get coverage test
+3. Run  `make build`  for get execute file
+
+#### Usage
+
 There are three endpoint in this app. Here they are:
 1. Get List Of Disbursement
 2. Get Disbursement From Thirdparty
