@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"disbursement-service/model"
+	"fmt"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -29,6 +30,8 @@ func (r *DisbursementRepository) GetListDisbursement(ctx context.Context, reques
 	var params []interface{}
 	var limit int64
 	var offset int64
+	var first = true
+	var count = 0
 
 	if request.Limit == nil || *request.Limit == 0 {
 		limit = 10
@@ -36,28 +39,43 @@ func (r *DisbursementRepository) GetListDisbursement(ctx context.Context, reques
 		limit = *request.Limit
 	}
 
-	if request.Page == nil || *request.Page == 0 {
-		offset = limit * 1
+	if request.Page == nil {
+		offset = limit * 0
 	} else {
 		page := *request.Page
-		offset = limit * page
+		offset = limit * (page - 1)
 	}
 
 	query.WriteString(" SELECT id, amount, status, timestamp, bank_code, account_number, beneficiary_name, remark, receipt, time_served, fee")
 	query.WriteString(" FROM flip_disbursement ")
 
 	if request != nil {
-		query.WriteString(" WHERE ")
 		if request.Status != nil && *request.Status != "" {
-			query.WriteString(" status = ?")
+			if !first {
+				query.WriteString(" AND ")
+			} else {
+				query.WriteString(" WHERE ")
+			}
+			query.WriteString(fmt.Sprintf(" status = $%d ", count+1))
+			count++
 			params = append(params, request.Status)
+			first = false
 		}
 
-		if (request.FirstDate != nil || *request.FirstDate != "") && (request.LastDate != nil || *request.LastDate != "") {
-			query.WriteString(" DATE(timestamp) >= ? AND DATE(timestamp) <= ?")
+		if request.FirstDate != nil && request.LastDate != nil {
+			if !first {
+				query.WriteString(" AND ")
+			} else {
+				query.WriteString(" WHERE ")
+			}
+			query.WriteString(fmt.Sprintf(" DATE(timestamp) >= $%d AND DATE(timestamp) <= $%d", count+1, count+2))
 			params = append(params, request.FirstDate, request.LastDate)
+			count = count + 2
+			first = false
 		}
-		query.WriteString(" LIMIT ? OFFSET ? ")
+
+		query.WriteString(fmt.Sprintf(" LIMIT $%d OFFSET $%d ", count+1, count+2))
+		count = count + 2
 		params = append(params, limit, offset)
 	}
 
@@ -80,20 +98,35 @@ func (r *DisbursementRepository) CountTotalOfDisbursement(ctx context.Context, r
 	var err error
 	var total int64
 	var params []interface{}
+	var count = 0
+	var first = true
 
 	query.WriteString(" SELECT COUNT(1) AS total")
 	query.WriteString(" FROM flip_disbursement ")
 
 	if request != nil {
-		query.WriteString(" WHERE ")
 		if request.Status != nil && *request.Status != "" {
-			query.WriteString(" status = ?")
+			if !first {
+				query.WriteString(" AND ")
+			} else {
+				query.WriteString(" WHERE ")
+			}
+			query.WriteString(fmt.Sprintf(" status = $%d ", count+1))
+			count++
 			params = append(params, request.Status)
+			first = false
 		}
 
-		if (request.FirstDate != nil || *request.FirstDate != "") && (request.LastDate != nil || *request.LastDate != "") {
-			query.WriteString(" DATE(timestamp) >= ? AND DATE(timestamp) <= ?")
+		if request.FirstDate != nil && request.LastDate != nil {
+			if !first {
+				query.WriteString(" AND ")
+			} else {
+				query.WriteString(" WHERE ")
+			}
+			query.WriteString(fmt.Sprintf(" DATE(timestamp) >= $%d AND DATE(timestamp) <= $%d", count+1, count+2))
 			params = append(params, request.FirstDate, request.LastDate)
+			count = count + 2
+			first = false
 		}
 	}
 

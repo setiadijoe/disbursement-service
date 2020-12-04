@@ -75,12 +75,11 @@ func main() {
 		logger.Log("transport", "http", "address", *httpAddr, "msg", "listening")
 		mux := http.NewServeMux()
 		ctx := context.Background()
-		mux.Handle("/disburse", transportHTTP.MakeHandler(ctx, uc, logger))
+		mux.Handle("/samplepath", transportHTTP.MakeHandler(ctx, uc, logger))
 		errChan <- http.ListenAndServe(*httpAddr, accessControl(mux))
 	}()
 
 	err = <-errChan
-	log.Println("is error ", err)
 	if nil != err {
 		log.Println("error: ", err)
 		panic(err)

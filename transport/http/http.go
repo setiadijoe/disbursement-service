@@ -48,11 +48,9 @@ func MakeHandler(ctx context.Context, u usecase.IDisbursement, logger kitlog.Log
 
 	router := mux.NewRouter()
 
-	router.Handle("/disburse", processGetListDisbursement).Methods("GET")
-
-	router.Handle("/disburse", processGetDisbursement).Methods("POST")
-
-	router.Handle("/disburse/{id}/update", processUpdateDisbursement).Methods("PUT")
+	router.Handle("/samplepath", processGetListDisbursement).Methods("GET")
+	router.Handle("/samplepath", processGetDisbursement).Methods("POST")
+	router.Handle("/samplepath/{id}", processUpdateDisbursement).Methods("GET")
 
 	return router
 }
@@ -74,6 +72,12 @@ func decodeRequestGetListDisbursement(ctx context.Context, r *http.Request) (int
 	page := r.URL.Query().Get("page")
 	limit := r.URL.Query().Get("limit")
 
+	if limit == "" {
+		limit = "10"
+	}
+	if page == "" {
+		page = "1"
+	}
 	intLimit, err := strconv.ParseInt(limit, 10, 64)
 	if nil != err {
 		return nil, err
@@ -136,5 +140,13 @@ func encodeError(_ context.Context, err error, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusUnprocessableEntity)
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"error": err.Error(),
+	})
+}
+
+func httpHandler(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		req := r.Clone(ctx)
+		next.ServeHTTP(w, req)
 	})
 }
