@@ -31,3 +31,8 @@ type FlipRequest struct {
 type FlipStatusRequest struct {
 	ID int64
 }
+
+// Keys ...
+var Keys = []string{
+	"id", "amount", "status", "timestamp", "bank_code", "account_number", "beneficiary_name", "remark", "receipt", "time_served", "fee",
+}

@@ -1,0 +1,16 @@
+{
+    "APP_ENV": "stagging",
+    "APP_PORT": ":3000",
+    "DEBUG": true,
+
+    "FLIP_HOST": "localhost",
+    "FLIP_AUTHORIZATION": "secret-key",
+
+    "DB_HOST": "0.0.0.0",
+    "DB_PORT": "5432",
+    "DB_USER": "postgres",
+    "DB_PASS": "password",
+    "DB_NAME": "disbursment",
+    "DB_MAX_OPEN_CONN": 0,
+    "DB_MAX_IDLE_CONN": 10
+}
